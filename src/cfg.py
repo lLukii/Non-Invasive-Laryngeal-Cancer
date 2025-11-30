@@ -10,3 +10,4 @@ svd_path = "/content/drive/MyDrive/ISEF/Datasets/SVD"
 model_name = "facebook/wav2vec2-large-xlsr-53"
 num_epochs = 10
 c_weight = 0.6
+num_models = 5

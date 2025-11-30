@@ -1,6 +1,5 @@
 from torch.optim.lr_scheduler import ReduceLROnPlateau
 from tqdm import tqdm
-import seaborn as sns
 import librosa
 import os
 from sklearn.preprocessing import MinMaxScaler
@@ -9,33 +8,10 @@ from sklearn.model_selection import train_test_split
 from cfg import *
 from src.dataset import AudioData, StratifiedSampler
 from torch.utils.data import DataLoader
-from sklearn.metrics import (
-    roc_auc_score,
-    balanced_accuracy_score,
-    classification_report,
-    confusion_matrix
-)
 
 import torch.nn as nn
 from models import Wav2VecClassifier, ContrastiveLoss
 
-def assess_model_perf(model, data, show_cm=False):
-  model.eval()
-  y_pred = []
-  y_true = []
-  with torch.no_grad():
-      for inputs, y in data:
-          x, a = inputs
-          _, pred = model(x.to(device), a.to(device))
-          pred = pred.argmax(1).cpu().numpy()
-          y_pred.extend(pred)
-          y_true.extend(y.cpu().numpy())
-
-  metrics = classification_report(y_true, y_pred)
-  cm = confusion_matrix(y_true, y_pred)
-  if show_cm: sns.heatmap(cm, annot=True, fmt="d", cmap="Blues")
-
-  return metrics, balanced_accuracy_score(y_true, y_pred)
 
 scaler = MinMaxScaler(feature_range=(-1, 1))
 femh_path = "/content/drive/MyDrive/ISEF/Datasets/FEMH"
@@ -126,7 +102,5 @@ def run_training():
     lr_scheduler.step(loss)
     print("Training CE Loss, and Accuracy", t_loss, c_loss, t_acc)
     print("Validation CE Loss, and Accuracy", loss, c_loss2, acc)
-    _, b_acc = assess_model_perf(model, val_loader)
-    print("Balanced Acc: ", b_acc)
 
 
