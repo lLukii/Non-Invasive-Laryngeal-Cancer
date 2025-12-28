@@ -13,7 +13,7 @@ class AudioData(Dataset):
     self.y = y
     self.augment = augment
     self.augmentations = nn.Sequential(
-        T.Vol(gain=np.random.uniform(0.4, 1.2)),
+        T.Vol(gain=np.random.uniform(0.8, 1.2)),
         T.PitchShift(sr, n_steps=np.random.randint(-3, 3)),
         T.SpeedPerturbation(sr, [0.9, 1.0, 1.0, 1.0, 1.1]),
     ).to(device)
